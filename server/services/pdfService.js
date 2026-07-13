@@ -5,7 +5,9 @@ const path = require("path");
 const generateResumeReport = (userName, fileName, analysis) => {
   return new Promise((resolve, reject) => {
     try {
-      const reportsDir = path.join(__dirname, "../temp/reports");
+      const os = require("os");
+
+const reportsDir = os.tmpdir();
 
       // Create reports folder if it doesn't exist
       if (!fs.existsSync(reportsDir)) {
