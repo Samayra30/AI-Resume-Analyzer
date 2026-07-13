@@ -12,8 +12,10 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: [
+      "http://localhost:5173",
+      "https://ai-resume-analyzer-rose-five.vercel.app",
+    ],
     credentials: true,
   })
 );
