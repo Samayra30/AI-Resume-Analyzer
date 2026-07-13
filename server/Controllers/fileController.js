@@ -129,6 +129,10 @@ const uploadFile = async (req, res) => {
               analysis,
             );
 
+console.log("PDF created at:", pdfPath);
+
+console.log("Sending email to:", user.email);
+
             if (user) {
               await sendResumeAnalysisEmail(
                 user.email,
