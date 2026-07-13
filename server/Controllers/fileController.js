@@ -1,5 +1,5 @@
 const cloudinary = require("../config/cloudinary");
-const File = require("../Models/file");
+const File = require("../Models/File");
 const ResumeAnalysis = require("../Models/ResumeAnalysis");
 const generateResumeReport = require("../services/pdfService");
 const User = require("../Models/User");
