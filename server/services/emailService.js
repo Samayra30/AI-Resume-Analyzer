@@ -1,4 +1,4 @@
-const resend = require("../config/resend");
+const transporter = require("../config/nodemailer");
 const fs = require("fs");
 
 const sendResumeAnalysisEmail = async (
@@ -9,14 +9,10 @@ const sendResumeAnalysisEmail = async (
   pdfPath
 ) => {
   try {
-    console.log("Preparing email...");
-
-    // Read PDF
-    const pdfBuffer = fs.readFileSync(pdfPath);
-
-    const response = await resend.emails.send({
-      from: "AI Resume Analyzer <onboarding@resend.dev>",
+    await transporter.sendMail({
+      from: `"AI Resume Analyzer" <${process.env.EMAIL_USER}>`,
       to: email,
+
       subject: "🎉 Your AI Resume Analysis Report",
 
       html: `
@@ -110,7 +106,7 @@ const sendResumeAnalysisEmail = async (
 
           <div class="header">
 
-            <h1>🚀 AI Resume Analyzer</h1>
+            <h1>AI Resume Analyzer</h1>
 
             <p>Your resume analysis is ready.</p>
 
@@ -141,10 +137,12 @@ const sendResumeAnalysisEmail = async (
 
             <div class="note">
 
-              <strong>📎 Download Your Report</strong>
+              <strong>📎 Attached Report</strong>
 
               <p>
-                Your complete AI Resume Analysis Report is attached as a PDF.
+                We've attached your complete AI Resume Analysis Report as a PDF.
+                Download it to view all strengths, weaknesses, missing skills,
+                and personalized suggestions.
               </p>
 
             </div>
@@ -157,7 +155,7 @@ const sendResumeAnalysisEmail = async (
             </p>
 
             <p>
-              Keep improving your resume and upload a new version anytime.
+              Keep improving your resume and upload a new version anytime to receive an updated AI analysis.
             </p>
 
           </div>
@@ -168,7 +166,7 @@ const sendResumeAnalysisEmail = async (
 
             <br><br>
 
-            Built with ❤️ using MERN, Gemini AI, Cloudinary & Resend
+            Built with ❤️ using MERN, Gemini AI, Cloudinary & Nodemailer
 
           </div>
 
@@ -182,24 +180,19 @@ const sendResumeAnalysisEmail = async (
       attachments: [
         {
           filename: "Resume_Analysis_Report.pdf",
-          content: pdfBuffer.toString("base64"),
+          path: pdfPath,
         },
       ],
     });
 
-    console.log("========== RESEND RESPONSE ==========");
-    console.log(response);
-    console.log("=====================================");
-
+    // Delete temporary PDF after email is sent
     if (fs.existsSync(pdfPath)) {
       fs.unlinkSync(pdfPath);
     }
 
     console.log("Resume analysis email sent successfully.");
   } catch (error) {
-    console.error("Resend Error:");
-    console.error(error);
-
+    console.error("Email Error:", error.message);
     throw error;
   }
 };
